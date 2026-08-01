@@ -1,7 +1,12 @@
 #Directory to backup and export
-DIR='/home/user/docker'
+DIRS=(
+    '/home/user/dir1'
+    '/home/user/dir2'
+
+
+)
 REMOTE_REPO='service-account@server:/some/path
-PREFIX='SERVER1-EXPORT'
+PREFIX='server-EXPORT'
 PASSWORD='secure-password'
-USE_KEY=false              # check if you want to use ssh key instead
+USE_KEY=true
 SSH_KEY='/path/to/key'
