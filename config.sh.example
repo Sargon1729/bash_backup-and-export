@@ -2,8 +2,6 @@
 DIRS=(
     '/home/user/dir1'
     '/home/user/dir2'
-
-
 )
 REMOTE_REPO='service-account@server:/some/path
 PREFIX='server-EXPORT'
