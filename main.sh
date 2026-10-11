@@ -42,7 +42,7 @@ log_info "Creating archive..."
 
 if zip -r  -v "/tmp/$ARCHIVE_NAME" "${DIRS[@]}" ; then
      log_success "Successfully created archive /tmp/$ARCHIVE_NAME"
-     chmod 600 "/tmp/$ARCHIVE_NAME"
+     chmod 660 "/tmp/$ARCHIVE_NAME"
     else
         log_error "Issues were encountered while creating archive"
         exit $EXIT_CANNOT_ZIP
