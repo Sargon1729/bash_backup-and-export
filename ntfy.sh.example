@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+#Variables
+source ./config.sh
+source ./logging.sh
+
+SEND_NOTIFICATION=true
+NTFY_URI=ntfy.local
+NTFY_TITLE=SERVER
+NTFY_PRIORITY=1
+NTFY_TAGS=1
+SCRIPT_NAME=BASH_BACKUP_AND_EXPORT
+
+snd_ntfy(){
+if [[ $SEND_NOTIFICATION == true ]]; then
+    curl -k -X POST "$NTFY_URI" \
+    -H "Title: $NTFY_TITLE" \
+    -H "Priority: $NTFY_PRIORITY" \
+    -H "Content-Type: application/json" \
+    --data-raw "$1"
+fi
+
+}
+

@@ -2,6 +2,7 @@
 #Variables
 source ./config.sh
 source ./logging.sh
+source ./ntfy.sh
 
 # === Exit Codes === #
 readonly EXIT_SUCCESS=0
@@ -20,6 +21,7 @@ readonly EXIT_CANNOT_DELETE=24
 # set variables
 log_info "----SCRIPT STARTED----"
 log_info "Use SSH key is set to $USE_KEY"
+log_info "SEND_NOTIFICATION is set to $SEND_NOTIFICATION"
 DATE=$(date '+%Y-%m-%d %H:%M:%S')
 ARCHIVE_NAME="$PREFIX-archive-${DATE}.zip"
 
@@ -45,6 +47,7 @@ if zip -r  -v "/tmp/$ARCHIVE_NAME" "${DIRS[@]}" ; then
      chmod 660 "/tmp/$ARCHIVE_NAME"
     else
         log_error "Issues were encountered while creating archive"
+        snd_ntfy "⚠️ [$SCRIPT_NAME] Issues were encountered while creating archive"
         exit $EXIT_CANNOT_ZIP
 fi
 
@@ -57,11 +60,14 @@ if [ $USE_KEY = true ]; then
 
         if scp -i $SSH_KEY "/tmp/$ARCHIVE_NAME" "$REMOTE_REPO" ; then
             log_success "Done"
+            ntfy_message="✅ [$SCRIPT_NAME] Successfuly copied archive to remote repo"
         else
             log_error "Issues were encountered while copying archive to remote repo"
+            ntfy_message="⚠️ $SCRIPT_NAME Issues were encountered while copying archive to remote repo"
         fi
     else
         log_error "Could not find key file $SSH_KEY"  #error out if file does not exist
+        ntfy_message="⚠️ [$SCRIPT_NAME] Could not find key file $SSH_KEY"
 
     fi
 fi
@@ -72,7 +78,10 @@ if rm -f "/tmp/$ARCHIVE_NAME" ; then
     log_success "Done"
 else
     log_error "Issues were encountered while deleting local archive /tmp/$ARCHIVE_NAME"
+    snd_ntfy "⚠️ [$SCRIPT_NAME] Issues were encountered while deleting local archive /tmp/$ARCHIVE_NAME"
     exit $EXIT_CANNOT_DELETE
 fi
+echo $ntfy_message
+snd_ntfy "$ntfy_message"
 
 log_info "----SCRIPT FINISHED----"
